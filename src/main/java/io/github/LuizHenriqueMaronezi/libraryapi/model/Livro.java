@@ -3,12 +3,14 @@ package io.github.LuizHenriqueMaronezi.libraryapi.model;
 import jakarta.persistence.*;
 import lombok.*;
 
+import java.math.BigDecimal;
 import java.time.LocalDate;
 import java.util.UUID;
 
 @Entity
 @Table(name = "livro")
 @Data
+@ToString(exclude = "autor")
 public class Livro {
 
     @Id
@@ -29,11 +31,14 @@ public class Livro {
     @Column(name = "genero", length = 30, nullable = false)
     private GeneroLivro genero;
 
-    @Column(name = "preco", precision = 18, scale = 2)
-    private Double preco;
+    @Column(name = "preco")
+    private BigDecimal preco;
 
-    @ManyToOne // Muitos livros para um autor
-    @JoinColumn(name = "autor_id")
+    @ManyToOne(
+           // cascade = CascadeType.ALL
+            fetch = FetchType.LAZY
+    )
+    @JoinColumn(name = "id_autor")
     private Autor autor;
 
 

@@ -3,8 +3,13 @@ package io.github.LuizHenriqueMaronezi.libraryapi.model;
 import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.Setter;
+import lombok.ToString;
+import org.springframework.data.annotation.CreatedDate;
+import org.springframework.data.annotation.LastModifiedDate;
+import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.util.Date;
 import java.util.List;
 import java.util.UUID;
@@ -13,6 +18,8 @@ import java.util.UUID;
 @Table(name = "autor", schema = "public") // schema opcional se for public
 @Getter
 @Setter // Fazer os getters e setters
+@ToString(exclude = "livros")
+@EntityListeners(AuditingEntityListener.class) // Para observar as mudanças
 public class Autor {
 
     @Id
@@ -32,14 +39,14 @@ public class Autor {
     @OneToMany(mappedBy = "autor") // Um autor para varios livros
     private List<Livro> livros;
 
-    @Deprecated
-    public Autor(){
+    @CreatedDate
+    @Column(name = "data_cadastro")
+    private LocalDateTime dataCadastro;
 
-    }
+    @LastModifiedDate
+    @Column(name = "data_atualizacao")
+    private LocalDateTime dataAtualizacao;
 
-    public Autor(LocalDate dataNascimento, String nome, String nacionalidade) {
-        this.dataNascimento = dataNascimento;
-        this.nome = nome;
-        this.nacionalidade = nacionalidade;
-    }
+    @Column(name = "id_usuario")
+    private UUID idUsuario;
 }
