@@ -1,0 +1,32 @@
+package io.github.LuizHenriqueMaronezi.libraryapi.controller;
+
+import io.github.LuizHenriqueMaronezi.libraryapi.controller.dto.CadastroLivroDTO;
+import io.github.LuizHenriqueMaronezi.libraryapi.controller.dto.ErroResposta;
+import io.github.LuizHenriqueMaronezi.libraryapi.exceptions.RegistroDuplicadoException;
+import io.github.LuizHenriqueMaronezi.libraryapi.service.LivroService;
+import jakarta.validation.Valid;
+import lombok.RequiredArgsConstructor;
+import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.*;
+
+@RestController
+@RequestMapping("/livros")
+@RequiredArgsConstructor
+public class LivroController {
+
+    private final LivroService service;
+
+    @PostMapping
+    public ResponseEntity<Object> salvar(@RequestBody @Valid CadastroLivroDTO dto){
+        try{
+            // Mapear dto para entidade
+            // Enviar a entidade para o service validar e salvar na base
+            // criar url para acesso dos dados do livro
+            // retornar a resposta com header location
+            return ResponseEntity.ok(dto);
+        }catch(RegistroDuplicadoException e){
+            var erroDTO = ErroResposta.conflito(e.getMessage());
+            return ResponseEntity.status(erroDTO.status()).body(erroDTO);
+        }
+    }
+}
