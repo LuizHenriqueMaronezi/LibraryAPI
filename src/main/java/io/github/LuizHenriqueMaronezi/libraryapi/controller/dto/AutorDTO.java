@@ -1,6 +1,5 @@
 package io.github.LuizHenriqueMaronezi.libraryapi.controller.dto;
 
-import io.github.LuizHenriqueMaronezi.libraryapi.model.Autor;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Past;
@@ -22,12 +21,4 @@ public record AutorDTO(
         @Size(max = 50, min = 2, message = "Campo fora do tamanho padrão")
         String nacionalidade) {
 
-    // Transformando o DTO em Entidade Autor
-    public Autor mapearParaAutor(){
-        Autor autor = new Autor();
-        autor.setNome(this.nome);
-        autor.setDataNascimento(this.dataNascimento);
-        autor.setNacionalidade(this.nacionalidade);
-        return autor;
-    }
 }
