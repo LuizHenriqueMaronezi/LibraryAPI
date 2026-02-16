@@ -2,6 +2,7 @@ package io.github.LuizHenriqueMaronezi.libraryapi.controller.common;
 
 import io.github.LuizHenriqueMaronezi.libraryapi.controller.dto.ErroCampo;
 import io.github.LuizHenriqueMaronezi.libraryapi.controller.dto.ErroResposta;
+import io.github.LuizHenriqueMaronezi.libraryapi.exceptions.CampoInvalidoException;
 import io.github.LuizHenriqueMaronezi.libraryapi.exceptions.OperacaoNaoPermitidaException;
 import io.github.LuizHenriqueMaronezi.libraryapi.exceptions.RegistroDuplicadoException;
 import org.springframework.http.HttpStatus;
@@ -50,5 +51,14 @@ public class GlobalExceptionHandler {
         return new ErroResposta(HttpStatus.INTERNAL_SERVER_ERROR.value(),
                 "Ocorreu um erro inesperado, entre em contato com a administração.",
                 List.of());
+    }
+
+    @ExceptionHandler(CampoInvalidoException.class)
+    @ResponseStatus(HttpStatus.UNPROCESSABLE_CONTENT)
+    public ErroResposta handleCampoInvalidoException(CampoInvalidoException e){
+
+        return new ErroResposta(HttpStatus.UNPROCESSABLE_CONTENT.value(),
+                "Erro de validação.",
+                List.of(new ErroCampo(e.getCampo(),e.getMessage())));
     }
 }
