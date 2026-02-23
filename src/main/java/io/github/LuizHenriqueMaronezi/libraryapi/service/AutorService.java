@@ -3,8 +3,10 @@ package io.github.LuizHenriqueMaronezi.libraryapi.service;
 import io.github.LuizHenriqueMaronezi.libraryapi.controller.dto.AutorDTO;
 import io.github.LuizHenriqueMaronezi.libraryapi.exceptions.OperacaoNaoPermitidaException;
 import io.github.LuizHenriqueMaronezi.libraryapi.model.Autor;
+import io.github.LuizHenriqueMaronezi.libraryapi.model.Usuario;
 import io.github.LuizHenriqueMaronezi.libraryapi.repository.AutorRepository;
 import io.github.LuizHenriqueMaronezi.libraryapi.repository.LivroRepository;
+import io.github.LuizHenriqueMaronezi.libraryapi.security.SecurityService;
 import io.github.LuizHenriqueMaronezi.libraryapi.validator.AutorValidator;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -25,9 +27,12 @@ public class AutorService {
     private final AutorRepository repository;
     private final AutorValidator validator;
     private final LivroRepository livroRepository;
+    private final SecurityService securityService;
 
     public Autor salvar(Autor autor){
         validator.validar(autor);
+        Usuario usuario = securityService.obterUsuarioLogado();
+        autor.setUsuario(usuario);
         return repository.save(autor);
     }
 

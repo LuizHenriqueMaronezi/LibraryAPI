@@ -6,11 +6,16 @@ import io.github.LuizHenriqueMaronezi.libraryapi.controller.mappers.AutorMapper;
 import io.github.LuizHenriqueMaronezi.libraryapi.exceptions.OperacaoNaoPermitidaException;
 import io.github.LuizHenriqueMaronezi.libraryapi.exceptions.RegistroDuplicadoException;
 import io.github.LuizHenriqueMaronezi.libraryapi.model.Autor;
+import io.github.LuizHenriqueMaronezi.libraryapi.model.Usuario;
 import io.github.LuizHenriqueMaronezi.libraryapi.service.AutorService;
+import io.github.LuizHenriqueMaronezi.libraryapi.service.UsuarioService;
 import jakarta.validation.Valid;
 import lombok.Generated;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 
@@ -29,6 +34,7 @@ public class AutorController implements GenericController {
     private final AutorMapper mapper;
 
     @PostMapping
+    @PreAuthorize("hasRole('GERENTE')")
     public ResponseEntity<Void> salvar(@RequestBody @Valid AutorDTO dto) {
         Autor autor = mapper.toEntity(dto);
         service.salvar(autor);
@@ -50,6 +56,7 @@ public class AutorController implements GenericController {
     }
 
     @DeleteMapping("/{id}")
+    @PreAuthorize("hasRole('GERENTE')")
     public ResponseEntity<Void> deletar(@PathVariable("id") String id) {
 
         var idAutor = UUID.fromString(id);
@@ -65,6 +72,7 @@ public class AutorController implements GenericController {
     }
 
     @GetMapping
+    @PreAuthorize("hasAnyRole('GERENTE','OPERADOR')")
     public ResponseEntity<List<AutorDTO>> pesquisar
             (@RequestParam(value = "nome", required = false) String nome,
              @RequestParam(value = "nacionalidade", required = false) String nacionalidade) {
@@ -79,6 +87,7 @@ public class AutorController implements GenericController {
     }
 
     @PutMapping("/{id}")
+    @PreAuthorize("hasRole('GERENTE')")
     public ResponseEntity<Void> atualizar(
             @PathVariable("id") String id, @RequestBody AutorDTO dto) {
 
